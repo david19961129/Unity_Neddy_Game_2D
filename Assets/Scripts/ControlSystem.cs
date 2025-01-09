@@ -1,26 +1,32 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class ControlSystem : MonoBehaviour
+namespace NEDDY
 {
-    [SerializeField] private float _speed = 10f;
-
-    private Vector2 _moveInput;
-    private Rigidbody2D _rigidbody;
-
-    private void Start()
+    /// <summary>
+    /// 控制系統
+    /// </summary>
+    public class ControlSystem : MonoBehaviour
     {
-        _rigidbody=GetComponent<Rigidbody2D>();
-    }
+        [SerializeField, Header("移動速度"), Tooltip("調整移動速度"), Range(0, 10)]
+        //修飾詞  類型 名稱 (指定 預設值)
+        private float moveSepped = 3.5f;
 
-    private void FixedUpdate()
-    {
-        _rigidbody.linearVelocity =_moveInput*_speed;
-    }
+        private Rigidbody2D rig;
+        private Animator ani;
+        private string parMove = "移動數值";
 
+        private void Awake()
+        {
+            //取得物件上2D剛體元並存至 rig 變數
+            rig = GetComponent<Rigidbody2D>();
+            ani = GetComponent<Animator>();
+        }
 
-    private void onMove(InputValue value)
-    {
-        _moveInput=value.Get<Vector2>();
+        private void Update()
+        {
+            float h = Input.GetAxis("Horizontal");
+            rig.linearVelocity = new Vector2(h * moveSepped, rig.linearVelocity.y);
+            ani.SetFloat(parMove,Mathf.Abs(h));
+        }
     }
 }
