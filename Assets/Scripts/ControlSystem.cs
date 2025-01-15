@@ -29,7 +29,10 @@ namespace NEDDY
         {
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
+
             rig.linearVelocity = new Vector2(h, v) * moveSpeed;
+
+
             ani.SetFloat(parh, (h));
             ani.SetFloat(parv, (v));
 
