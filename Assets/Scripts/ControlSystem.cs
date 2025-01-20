@@ -10,6 +10,11 @@ namespace NEDDY
         private Animator ani;
         private string parMove = "移動數值";
 
+        //屬性面板2存取方式:1.公開屬性。2.公開方式
+        //是否能控制
+        public bool canControl { get; set; }=false;
+        public bool canMove { get; set; } = false;
+
         private void Awake()
         {
             rig = GetComponent<Rigidbody2D>();
@@ -21,12 +26,19 @@ namespace NEDDY
 
         private void Update()
         {
+#if UNITY_EDITOR
+            Test_CanControl();
+#endif
+            Test_CanControl();
+            //如果不能控制就跳出
+            if (!canControl) return;
             Move();
             Filp();
         }
 
         private void Move()
         {
+            if (!canControl) return;
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
 
@@ -43,6 +55,28 @@ namespace NEDDY
         {
 
         }
+
+        public void StopAllControl()
+        {
+            canControl = false;
+            rig.linearVelocity = Vector2.zero;
+            ani.SetFloat (parMove, 0);
+        }
+#if UNITY_EDITOR
+        /// <summary>
+        /// 測試用:全開
+        /// 按1才能啟動
+        /// </summary>
+        private void Test_CanControl()
+        {   
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                canControl=true;
+                canMove=true;
+            }
+        }
+
+#endif
     }
 
 }
