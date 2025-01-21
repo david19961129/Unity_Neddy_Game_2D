@@ -15,6 +15,12 @@ namespace NEDDY
         private string parFadeIn = "觸發淡入", parFadeOut = "觸發淡出";
         private bool startInteraction;
         private IInteraction interactionObject;
+        private WorldToUIPosition interactionPosition;
+
+        private void Awake()
+        {
+            interactionPosition = aniInteractionUI.GetComponent<WorldToUIPosition>();
+        }
 
         //觸發事件
         //collision 儲存碰到物件的碰撞資訊
@@ -25,6 +31,7 @@ namespace NEDDY
                 aniInteractionUI.SetTrigger(parFadeIn);
                 startInteraction = true;
                 interactionObject=interaction;
+                interactionPosition.UpdatePosition(collision.transform, Vector3.zero);
             }
         }
 
@@ -48,7 +55,9 @@ namespace NEDDY
         private void StartInteraction()
         {
             if(!startInteraction) return;
+
             if(interactionObject == null)return;
+
             if(Input.GetKeyDown(interactionKey))
             {
                 interactionObject.Interaction();
